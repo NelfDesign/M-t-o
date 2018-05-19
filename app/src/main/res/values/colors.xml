@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#40caff</color>
+    <color name="colorPrimaryDark">#40caff</color>
+    <color name="colorAccent">#40caff</color>
+    <color name="cardViewBack">#f4ff81</color>
+    <color name="appback">#e3f2fd</color>
+    <color name="white">#FFF</color>
+    <color name="rouge">#39a9ff</color>
+</resources>
