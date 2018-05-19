@@ -12,14 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     ClimatAdaptateur climatAdaptateur;
-
     ImageButton btn_ville;
 
     public static String VILLE_CLEF = "Ville";
@@ -50,16 +46,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         //initialisation des varaibles
         recyclerView = findViewById(R.id.recyclerview);
-
         //initialisation de la requete
         new RequestCinqJours().execute();
-
     }
-
-
 
     private class RequestCinqJours extends AsyncTask<Void, Void, Climat>{
 
@@ -95,11 +86,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Response response = client.newCall(request).execute();
                 String body = response.body().string();
-                Location loc = parseLocation(body);
-
-                 climat =  parseMain(body);
+                Location loc = Utilities.parseLocation(body);
+                 climat =  Utilities.parseMain(body);
                  climat.setLocation(loc);
-
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -124,76 +113,4 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setAdapter(climatAdaptateur);
         }
     }
-
-    private Climat parseMain(String body) throws JSONException {
-        JSONObject json = new JSONObject(body);
-        JSONArray list = json.getJSONArray("list");
-
-        ArrayList<Temp> tempArray = new ArrayList<>();
-        ArrayList<ClimatInfos> climatArray = new ArrayList<>();
-
-        for (int i =0 ; i<list.length(); i++) {
-            JSONObject elementi = list.getJSONObject(i);
-            Temp tempi = parseTemps(elementi);
-
-            //si le premier element est supérieur à 15h alors on le prend
-            if (i == 0 && Integer.valueOf(tempi.dt_text.substring(11,13)) > 15){
-                tempArray.add(tempi);
-                climatArray.add(parseClimat(elementi));
-            }
-            //pour les autres elements si le temp = 15h on les met dans le tableau
-            if (tempi.dt_text.substring(11,13).equals("15")){
-                tempArray.add(tempi);
-                climatArray.add(parseClimat(elementi));
-            }
-        }
-        Climat climat = new Climat(tempArray,climatArray);
-        return climat;
-    }
-
-    private ClimatInfos parseClimat(JSONObject element0) throws JSONException {
-
-        JSONObject main = element0.getJSONObject("main");
-        float temperature = (float) main.getDouble("temp");
-        float temp_min = (float) main.getDouble("temp_min");
-        float temp_max = (float) main.getDouble("temp_max");
-        float pressure = (float) main.getDouble("pressure");
-        int humidity = main.getInt("humidity");
-        JSONArray weatherarray = element0.getJSONArray("weather");
-        JSONObject temp = weatherarray.getJSONObject(0);
-        String weather = temp.getString("main");
-
-        int id = temp.getInt("id");
-        JSONObject wind = element0.getJSONObject("wind");
-        float vent = (float) wind.getDouble("speed");
-
-        ClimatInfos climatInfos = new ClimatInfos(id, temperature, temp_max, temp_min,pressure, vent, humidity, weather);
-        return climatInfos;
-    }
-
-    private Temp parseTemps(JSONObject element0) throws JSONException {
-
-        int unix = element0.getInt("dt");
-        String date =Utilities.date(unix,"EEEE dd MMMM YYYY") ;
-        String dt_text = element0.getString("dt_txt");
-
-        Temp temp = new Temp(unix,date, dt_text);
-        return temp;
-    }
-
-    private Location parseLocation(String body) throws JSONException {
-
-            JSONObject json = new JSONObject(body);
-            JSONObject city = json.getJSONObject("city");
-            String name = city.getString("name");
-            int id = city.getInt("id");
-            float lat = (float) city.getJSONObject("coord").getDouble("lat");
-            float lon = (float) city.getJSONObject("coord").getDouble("lon");
-
-            String country = city.getString("country");
-
-            Location loc = new Location(id, lat, lon, name, country);
-            return loc;
-    }
-
 }

@@ -1,10 +1,26 @@
 package fr.nelfdesign.meteonelf;
 
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class Utilities {
 
@@ -114,5 +130,76 @@ public class Utilities {
                 .build();
 
          return uriBuilder;
+    }
+
+    public static Location parseLocation(String body) throws JSONException {
+
+        JSONObject json = new JSONObject(body);
+        JSONObject city = json.getJSONObject("city");
+        String name = city.getString("name");
+        int id = city.getInt("id");
+        float lat = (float) city.getJSONObject("coord").getDouble("lat");
+        float lon = (float) city.getJSONObject("coord").getDouble("lon");
+
+        String country = city.getString("country");
+
+        Location loc = new Location(id, lat, lon, name, country);
+        return loc;
+    }
+
+    public static Temp parseTemps(JSONObject element0) throws JSONException {
+
+        int unix = element0.getInt("dt");
+        String date =Utilities.date(unix,"EEEE dd MMMM YYYY") ;
+        String dt_text = element0.getString("dt_txt");
+
+        Temp temp = new Temp(unix,date, dt_text);
+        return temp;
+    }
+
+    public static ClimatInfos parseClimat(JSONObject element0) throws JSONException {
+
+        JSONObject main = element0.getJSONObject("main");
+        float temperature = (float) main.getDouble("temp");
+        float temp_min = (float) main.getDouble("temp_min");
+        float temp_max = (float) main.getDouble("temp_max");
+        float pressure = (float) main.getDouble("pressure");
+        int humidity = main.getInt("humidity");
+        JSONArray weatherarray = element0.getJSONArray("weather");
+        JSONObject temp = weatherarray.getJSONObject(0);
+        String weather = temp.getString("main");
+
+        int id = temp.getInt("id");
+        JSONObject wind = element0.getJSONObject("wind");
+        float vent = (float) wind.getDouble("speed");
+
+        ClimatInfos climatInfos = new ClimatInfos(id, temperature, temp_max, temp_min,pressure, vent, humidity, weather);
+        return climatInfos;
+    }
+
+    public static Climat parseMain(String body) throws JSONException {
+        JSONObject json = new JSONObject(body);
+        JSONArray list = json.getJSONArray("list");
+
+        ArrayList<Temp> tempArray = new ArrayList<>();
+        ArrayList<ClimatInfos> climatArray = new ArrayList<>();
+
+        for (int i =0 ; i<list.length(); i++) {
+            JSONObject elementi = list.getJSONObject(i);
+            Temp tempi = Utilities.parseTemps(elementi);
+
+            //si le premier element est supérieur à 15h alors on le prend
+            if (i == 0 && Integer.valueOf(tempi.dt_text.substring(11,13)) > 15){
+                tempArray.add(tempi);
+                climatArray.add(Utilities.parseClimat(elementi));
+            }
+            //pour les autres elements si le temp = 15h on les met dans le tableau
+            if (tempi.dt_text.substring(11,13).equals("15")){
+                tempArray.add(tempi);
+                climatArray.add(Utilities.parseClimat(elementi));
+            }
+        }
+        Climat climat = new Climat(tempArray,climatArray);
+        return climat;
     }
 }

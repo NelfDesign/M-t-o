@@ -52,11 +52,11 @@ public class DetailsActivity extends AppCompatActivity {
         card.setBackground(imageDrawable2);
 
         date.setText(temp.getDate());
-        temperature.setText("Temp: " + climatInfos.getTemp() + " °C ");
+        temperature.setText("Temp: " + (int) climatInfos.getTemp() + " °C ");
         vent.setText("Vent: " + climatInfos.getVent() + " mps ");
-        humidity.setText("Humidité: " + climatInfos.getHumidity() + " % ");
-        pression.setText("Pression: " + climatInfos.getPressure() + " hPa ");
-        ville.setText(loc.getName() + " , " + loc.getCountry());
+        humidity.setText("Humidity: " + (int) climatInfos.getHumidity() + " % ");
+        pression.setText("Press: " + (int) climatInfos.getPressure() + " hPa ");
+        ville.setText(loc.getName() + ", " + loc.getCountry());
 
     }
 }

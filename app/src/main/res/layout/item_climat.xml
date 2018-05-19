@@ -43,7 +43,9 @@
             android:layout_marginTop="8dp"
             android:text="Mardi 15 mai 2018"
             android:textSize="24dp"
-            android:textColor="@color/cardViewBack"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/boutontemp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.454"
             app:layout_constraintStart_toEndOf="@+id/img"
@@ -58,7 +60,9 @@
             android:layout_marginTop="8dp"
             android:text="Temp max :"
             android:textSize="40dp"
-            android:textColor="@color/cardViewBack"
+            android:textStyle="bold"
+            android:background="@drawable/boutontemp"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toEndOf="@+id/img"
             app:layout_constraintTop_toBottomOf="@+id/date_tv" />
 
@@ -70,8 +74,10 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="4dp"
             android:text="Temp min :"
-            android:textSize="18dp"
-            android:textColor="@color/cardViewBack"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:background="@drawable/boutontemp"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toEndOf="@+id/img"
             app:layout_constraintTop_toBottomOf="@+id/temperature" />
 
