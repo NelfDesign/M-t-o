@@ -1,26 +1,16 @@
 package fr.nelfdesign.meteonelf;
 
+
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class Utilities {
 
@@ -47,70 +37,70 @@ public class Utilities {
         return (int) ((temp - 32) / 1.8);
     }
 
-    public static String date(long dt, String formatString){
+    public static String date(long dt, String formatString) {
         SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.FRENCH);
         return format.format(new Date(dt * 1000));
     }
 
-    public static String getIconUri(int iconId){
-            //variable par defaut
-            String toReturn = "@drawable/terre";
-        if (iconId>=200 && iconId<=232){
+    public static String getIconUri(int iconId) {
+        //variable par defaut
+        String toReturn = "@drawable/terre";
+        if (iconId >= 200 && iconId <= 232) {
             toReturn = tempete;
-        }else if (iconId>=300 && iconId<=321){
+        } else if (iconId >= 300 && iconId <= 321) {
             toReturn = pluiefine;
-        }else if (iconId>=500 && iconId<=504){
+        } else if (iconId >= 500 && iconId <= 504) {
             toReturn = pluie;
-        }else if(iconId == 511){
+        } else if (iconId == 511) {
             toReturn = neige;
-        }else if (iconId>=520 && iconId<=531){
+        } else if (iconId >= 520 && iconId <= 531) {
             toReturn = pluiefine;
-        }else if (iconId>=600 && iconId<=622){
+        } else if (iconId >= 600 && iconId <= 622) {
             toReturn = neige;
-        }else if (iconId>=701 && iconId<=781){
+        } else if (iconId >= 701 && iconId <= 781) {
             toReturn = brouillard;
-        }else if (iconId == 800){
+        } else if (iconId == 800) {
             toReturn = soleil;
-        }else if (iconId == 801){
+        } else if (iconId == 801) {
             toReturn = soleil_nuage;
-        }else if (iconId == 802){
+        } else if (iconId == 802) {
             toReturn = nuageux;
-        }else if (iconId == 803 || iconId == 804){
+        } else if (iconId == 803 || iconId == 804) {
             toReturn = nuagecasse;
         }
         return toReturn;
     }
 
-    public static String getUriBack(int iconId){
+    public static String getUriBack(int iconId) {
         //variable par defaut
         String back = " ";
-        if (iconId>=200 && iconId<=232){
+        if (iconId >= 200 && iconId <= 232) {
             back = orage;
-        }else if (iconId>=300 && iconId<=321){
+        } else if (iconId >= 300 && iconId <= 321) {
             back = pluiefine2;
-        }else if (iconId>=500 && iconId<=504){
+        } else if (iconId >= 500 && iconId <= 504) {
             back = pluie2;
-        }else if(iconId == 511){
+        } else if (iconId == 511) {
             back = neige2;
-        }else if (iconId>=520 && iconId<=531){
+        } else if (iconId >= 520 && iconId <= 531) {
             back = pluiefine2;
-        }else if (iconId>=600 && iconId<=622){
+        } else if (iconId >= 600 && iconId <= 622) {
             back = neige2;
-        }else if (iconId>=701 && iconId<=781){
+        } else if (iconId >= 701 && iconId <= 781) {
             back = brouillard2;
-        }else if (iconId == 800){
+        } else if (iconId == 800) {
             back = soleilback;
-        }else if (iconId == 801){
+        } else if (iconId == 801) {
             back = soleil_nuage2;
-        }else if (iconId == 802){
+        } else if (iconId == 802) {
             back = nuageux2;
-        }else if (iconId == 803 || iconId == 804){
+        } else if (iconId == 803 || iconId == 804) {
             back = nuagecasse2;
         }
         return back;
     }
 
-    public static Uri.Builder getUrl(String ville){
+    public static Uri.Builder getUrl(String ville) {
         final String apiKey = "b897bd90cec3266cc192725f3f7ef37e";
         final String unit = "metric";
 
@@ -119,17 +109,17 @@ public class Utilities {
         final String appidParam = "APPID";
         final String Metric = "units";
 
-         uriBuilder.scheme("http")
+        uriBuilder.scheme("http")
                 .authority("api.openweathermap.org")
                 .appendPath("data")
                 .appendPath("2.5")
                 .appendPath("forecast")
                 .appendQueryParameter(queryParam, ville)
-                .appendQueryParameter(Metric,unit)
+                .appendQueryParameter(Metric, unit)
                 .appendQueryParameter(appidParam, apiKey)
                 .build();
 
-         return uriBuilder;
+        return uriBuilder;
     }
 
     public static Location parseLocation(String body) throws JSONException {
@@ -150,10 +140,10 @@ public class Utilities {
     public static Temp parseTemps(JSONObject element0) throws JSONException {
 
         int unix = element0.getInt("dt");
-        String date =Utilities.date(unix,"EEEE dd MMMM YYYY") ;
+        String date = Utilities.date(unix, "EEEE dd MMMM YYYY");
         String dt_text = element0.getString("dt_txt");
 
-        Temp temp = new Temp(unix,date, dt_text);
+        Temp temp = new Temp(unix, date, dt_text);
         return temp;
     }
 
@@ -173,7 +163,7 @@ public class Utilities {
         JSONObject wind = element0.getJSONObject("wind");
         float vent = (float) wind.getDouble("speed");
 
-        ClimatInfos climatInfos = new ClimatInfos(id, temperature, temp_max, temp_min,pressure, vent, humidity, weather);
+        ClimatInfos climatInfos = new ClimatInfos(id, temperature, temp_max, temp_min, pressure, vent, humidity, weather);
         return climatInfos;
     }
 
@@ -184,22 +174,22 @@ public class Utilities {
         ArrayList<Temp> tempArray = new ArrayList<>();
         ArrayList<ClimatInfos> climatArray = new ArrayList<>();
 
-        for (int i =0 ; i<list.length(); i++) {
+        for (int i = 0; i < list.length(); i++) {
             JSONObject elementi = list.getJSONObject(i);
             Temp tempi = Utilities.parseTemps(elementi);
 
             //si le premier element est supérieur à 15h alors on le prend
-            if (i == 0 && Integer.valueOf(tempi.dt_text.substring(11,13)) > 15){
+            if (i == 0 && Integer.valueOf(tempi.dt_text.substring(11, 13)) > 15) {
                 tempArray.add(tempi);
                 climatArray.add(Utilities.parseClimat(elementi));
             }
             //pour les autres elements si le temp = 15h on les met dans le tableau
-            if (tempi.dt_text.substring(11,13).equals("15")){
+            if (tempi.dt_text.substring(11, 13).equals("15")) {
                 tempArray.add(tempi);
                 climatArray.add(Utilities.parseClimat(elementi));
             }
         }
-        Climat climat = new Climat(tempArray,climatArray);
+        Climat climat = new Climat(tempArray, climatArray);
         return climat;
     }
 }
