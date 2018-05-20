@@ -8,7 +8,6 @@ public class Location implements Serializable{
     protected float lon;
     protected String name;
     protected String country;
-    String nouvelleVille = null;
 
     public Location(int id, float lat, float lon, String name, String country) {
         this.id = id;
@@ -16,18 +15,6 @@ public class Location implements Serializable{
         this.lon = lon;
         this.name = name;
         this.country = country;
-    }
-
-    public Location(String nouvelleVille) {
-        this.nouvelleVille = nouvelleVille;
-    }
-
-    public String getNouvelleVille() {
-        return nouvelleVille;
-    }
-
-    public void setNouvelleVille(String nouvelleVille) {
-        this.nouvelleVille = nouvelleVille;
     }
 
     public int getId() {
