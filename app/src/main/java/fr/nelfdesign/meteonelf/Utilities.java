@@ -1,15 +1,26 @@
 package fr.nelfdesign.meteonelf;
 
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.text.Editable;
+import android.widget.EditText;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Utilities {
@@ -103,6 +114,7 @@ public class Utilities {
     public static Uri.Builder getUrl(String ville) {
         final String apiKey = "b897bd90cec3266cc192725f3f7ef37e";
         final String unit = "metric";
+        final String lang = "French - fr";
 
         Uri.Builder uriBuilder = new Uri.Builder();
         final String queryParam = "q";
@@ -178,18 +190,33 @@ public class Utilities {
             JSONObject elementi = list.getJSONObject(i);
             Temp tempi = Utilities.parseTemps(elementi);
 
-            //si le premier element est supérieur à 15h alors on le prend
-            if (i == 0 && Integer.valueOf(tempi.dt_text.substring(11, 13)) > 15) {
+            //si le premier element est supérieur à 12h alors on le prend
+            if (i == 0 && Integer.valueOf(tempi.dt_text.substring(11, 13)) > 12) {
                 tempArray.add(tempi);
                 climatArray.add(Utilities.parseClimat(elementi));
             }
-            //pour les autres elements si le temp = 15h on les met dans le tableau
-            if (tempi.dt_text.substring(11, 13).equals("15")) {
+            //pour les autres elements si le temp = 12h on les met dans le tableau
+            if (tempi.dt_text.substring(11, 13).equals("12")) {
                 tempArray.add(tempi);
                 climatArray.add(Utilities.parseClimat(elementi));
             }
         }
         Climat climat = new Climat(tempArray, climatArray);
         return climat;
+    }
+
+    public static void showLatLon(EditText ville, GoogleMap mMap, Context context) throws IOException {
+        Editable text = ville.getText();
+        String texte = text.toString();
+        List<Address> adresses = null;
+
+        if (texte != null || !texte.equals("")){
+            Geocoder geocoder =new Geocoder(context);
+            adresses = geocoder.getFromLocationName(texte,1);
+        }
+
+        Address address = adresses.get(0);
+        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,6));
     }
 }
