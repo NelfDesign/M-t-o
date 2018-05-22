@@ -6,11 +6,14 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.text.Editable;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -205,18 +208,21 @@ public class Utilities {
         return climat;
     }
 
-    public static void showLatLon(EditText ville, GoogleMap mMap, Context context) throws IOException {
-        Editable text = ville.getText();
-        String texte = text.toString();
+    public static void showLatLon(String ville, GoogleMap mMap, Context context) throws IOException {
         List<Address> adresses = null;
 
-        if (texte != null || !texte.equals("")){
+        if (ville != null || !ville.equals("")){
             Geocoder geocoder =new Geocoder(context);
-            adresses = geocoder.getFromLocationName(texte,1);
+            adresses = geocoder.getFromLocationName(ville,1);
         }
 
         Address address = adresses.get(0);
         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,6));
+        //marquer perso
+        mMap.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag))
+                .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
+                .position(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,7));
     }
 }

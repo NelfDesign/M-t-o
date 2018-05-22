@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        //initialisation des varaibles
+        //initialisation des variables
         recyclerView = findViewById(R.id.recyclerview);
-        //initialisation de la requete
+        //initialisation de la requête
         new RequestCinqJours().execute();
     }
 

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,8 +21,6 @@ import java.io.IOException;
 public class VilleActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     Button btn;
-    Button btn_verif;
-    EditText ville;
     Ville town;
     GoogleMap mMap;
 
@@ -29,33 +30,42 @@ public class VilleActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_ville);
 
         btn = findViewById(R.id.btn_valider);
-        btn_verif = findViewById(R.id.btn_verif);
-        ville = findViewById(R.id.ville);
+       final String TAG = "PlaceAutoComplete";
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Editable text = ville.getText();
-                String texte = text.toString();
-                town = new Ville(texte);
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra(MainActivity.VILLE_CLEF, town);
-                context.startActivity(intent);
-            }
-        });
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
-        btn_verif.setOnClickListener(new View.OnClickListener() {
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
-            public void onClick(View v) {
+            public void onPlaceSelected(Place place) {
+
+                final String name = place.getName().toString();
+
                 try {
-                    Utilities.showLatLon(ville,mMap,getApplicationContext());
+                    Utilities.showLatLon(name,mMap,getApplicationContext());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Context context = v.getContext();
+                        town = new Ville(name);
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra(MainActivity.VILLE_CLEF, town);
+                        context.startActivity(intent);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
             }
         });
     }
@@ -64,5 +74,4 @@ public class VilleActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
     }
-
 }
