@@ -1,29 +1,14 @@
 package fr.nelfdesign.meteonelf;
 
-
-import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
-import android.text.Editable;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class Utilities {
@@ -46,10 +31,6 @@ public class Utilities {
     private static String brouillard2 = "@drawable/brouillard2";
     private static String pluie2 = "@drawable/pluie2";
     private static String pluiefine2 = "@drawable/pluiefine";
-
-    public static int convertCelcius(double temp) {
-        return (int) ((temp - 32) / 1.8);
-    }
 
     public static String date(long dt, String formatString) {
         SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.FRENCH);
@@ -206,23 +187,5 @@ public class Utilities {
         }
         Climat climat = new Climat(tempArray, climatArray);
         return climat;
-    }
-
-    public static void showLatLon(String ville, GoogleMap mMap, Context context) throws IOException {
-        List<Address> adresses = null;
-
-        if (ville != null || !ville.equals("")){
-            Geocoder geocoder =new Geocoder(context);
-            adresses = geocoder.getFromLocationName(ville,1);
-        }
-
-        Address address = adresses.get(0);
-        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-        //marquer perso
-        mMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag))
-                .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
-                .position(latLng));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,7));
     }
 }

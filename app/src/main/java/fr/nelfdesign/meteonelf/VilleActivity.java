@@ -88,7 +88,7 @@ public class VilleActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 13f;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168),
@@ -165,7 +165,7 @@ public class VilleActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-       HideSoftKeyboard();
+        HideSoftKeyboard();
     }
 
     private void getDeviceLocation() {
@@ -287,7 +287,7 @@ public class VilleActivity extends AppCompatActivity implements OnMapReadyCallba
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-   private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             HideSoftKeyboard();
