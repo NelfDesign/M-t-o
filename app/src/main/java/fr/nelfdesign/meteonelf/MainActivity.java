@@ -54,20 +54,19 @@ public class MainActivity extends AppCompatActivity {
 
     private class RequestCinqJours extends AsyncTask<Void, Void, Climat>{
 
-        public String ville;
         Climat climat = null;
 
         @Override
         protected Climat doInBackground(Void... voids) {
-            Ville town = (Ville) getIntent().getSerializableExtra(VILLE_CLEF);
+            String town = (String) getIntent().getSerializableExtra(VILLE_CLEF);
             Uri.Builder uri = null;
 
             if (town == null){
-                ville = "Paris";
-                uri = Utilities.getUrl(ville);
+                town = "Paris";
+                uri = Utilities.getUrl(town);
             }else {
-                ville = town.getName().toString();
-                uri = Utilities.getUrl(ville);
+
+                uri = Utilities.getUrl(town);
             }
 
             URL url = null;

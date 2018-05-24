@@ -10,11 +10,20 @@ import java.io.Serializable;
             this.name = name;
         }
 
+        public Ville(){}
+
         public String getName() {
             return name;
         }
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "Ville{" +
+                    "name='" + name + '\'' +
+                    '}';
         }
     }
